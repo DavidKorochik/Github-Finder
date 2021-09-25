@@ -1,25 +1,50 @@
-import logo from './logo.svg';
+import React, { Fragment } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Navbar from './components/layout/Navbar';
 import './App.css';
+import User from './components/users/User';
+import Search from './components/users/Search';
+import Alert from './components/layout/Alert';
+import SingleUser from './components/users/SingleUser';
+import GithubState from './context/github/githubState';
+import AlertsContext from './context/alerts/alertsContext';
+import About from './components/pages/About';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <GithubState>
+      <AlertsContext>
+        <Router>
+          <div className='App'>
+            <Navbar title='Github Finder' icon='fab fa-github' />
+            <div className='container'>
+              <Alert />
+              <Switch>
+                <Route
+                  exact
+                  path='/'
+                  render={(props) => (
+                    <Fragment>
+                      <Search />
+                      <User />
+                    </Fragment>
+                  )}
+                />
+                <Route exact path='/about' component={About} />
+                <Route
+                  exact
+                  path='/users/:login'
+                  render={(props) => (
+                    <Fragment>
+                      <SingleUser {...props} />
+                    </Fragment>
+                  )}
+                />
+              </Switch>
+            </div>
+          </div>
+        </Router>
+      </AlertsContext>
+    </GithubState>
   );
 }
-
-export default App;
